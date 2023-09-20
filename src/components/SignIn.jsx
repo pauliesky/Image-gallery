@@ -3,6 +3,8 @@ import gallery_icon from "../assets/gallery.png";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./Firebase";
 import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -20,6 +22,7 @@ const SignIn = () => {
       })
       .catch((error) => {
         const errorCode = error.code;
+        toast.error("Kindly Sign Up");
         const errorMessage = error.message;
         console.log(errorCode, errorMessage);
       });
@@ -30,9 +33,10 @@ const SignIn = () => {
         <div className="   sm:w-1/2 lg:w-1/3 shadow-xl shadow-[#d7cde7] px-12 py-16 bg-white rounded-lg ">
           <img className="w-[50px]" alt="gallery-icon" src={gallery_icon} />
           <span className="font-bold text-4xl text-black font-sans">
-            Hey, there, <br /> Welcome!
+            Hey, there, <br />
+            Login In!
           </span>
-          <p className="mt-2 text-gray-900">Hop in!</p>
+          <p className="mt-2 text-gray-900">Come see beauty</p>
           <form onSubmit={handleSubmit} className=" mt-5 flex flex-col">
             <label className="mt-3">Email</label>
             <input
@@ -57,9 +61,16 @@ const SignIn = () => {
           </form>
           <p className="mt-3">
             {" Don't have an account? "}
-            <Link to="/">Sign Up</Link>
+            <Link style={{ color: "#5d4cc3" }} to="/">
+              Sign Up
+            </Link>
           </p>
         </div>
+        <ToastContainer
+          autoClose={2000}
+          hideProgressBar={true}
+          position="top-center"
+        />
       </section>
     </>
   );
