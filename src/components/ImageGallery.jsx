@@ -1,8 +1,16 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import wallpaper from "../assets/wallpaper.jpg";
 import gallery_logo from "../assets/gallery.png";
 import { MoonLoader } from "react-spinners";
 import { DndContext, closestCenter } from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 const ImageGallery = () => {
   const [data, setData] = useState([]);
@@ -43,8 +51,38 @@ const ImageGallery = () => {
   }, []);
   console.log(data);
 
+  const SortTableUser = ({ item }) => {
+    const { attributes, listeners, setNodeRef, transform, transition } =
+      useSortable({ id: item.id });
+
+    const style = {
+      transition,
+      transform: CSS.Transform.toString(transform),
+    };
+
+    return (
+      <img
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        {...listeners}
+        // key={item.id}
+        className=" h-[200px]  border-white border-8 shadow-lg shadow-slate-300 "
+        alt="Image"
+        src={`https://image.tmdb.org/t/p/original${item.backdrop_path}`}
+      />
+    );
+  };
   const onDragEnd = (event) => {
-    console.log("onDragEnd", event);
+    const { active, over } = event;
+    if (active.id === over.id) {
+      return;
+    }
+    setData((data) => {
+      const oldIndex = data.findIndex((data) => data.id === active.id);
+      const newIndex = data.findIndex((data) => data.id === over.id);
+      return arrayMove(data, oldIndex, newIndex);
+    });
   };
 
   return (
@@ -68,24 +106,23 @@ const ImageGallery = () => {
           {loading && <MoonLoader cssOverride={override} color="#7E1F86" />}
 
           <article className="grid  sm:grid-cols-2  md:grid-cols-3  lg:grid-cols-5 gap-5">
-            {data &&
-              data.map((item) => {
-                return (
-                  <>
-                    <DndContext
-                      collisionDetection={closestCenter}
-                      onDragEnd={onDragEnd}
-                    >
-                      <img
-                        key={item.id}
-                        className=" h-[300px] w-[300px] border-white border-5 shadow-xl shadow-slate-500 "
-                        alt="Image"
-                        src={`https://image.tmdb.org/t/p/original${item.backdrop_path}`}
-                      />
-                    </DndContext>
-                  </>
-                );
-              })}
+            <DndContext
+              collisionDetection={closestCenter}
+              onDragEnd={onDragEnd}
+            >
+              <SortableContext
+                items={data}
+                strategy={verticalListSortingStrategy}
+              >
+                {data.map((item) => {
+                  return (
+                    <>
+                      <SortTableUser key={item.id} item={item}></SortTableUser>
+                    </>
+                  );
+                })}
+              </SortableContext>
+            </DndContext>
           </article>
         </section>
       </section>
