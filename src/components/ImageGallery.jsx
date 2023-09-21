@@ -11,6 +11,8 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+// import { useNavigate } from "react-router-dom";
+import { auth } from "./Firebase";
 
 const ImageGallery = () => {
   const [data, setData] = useState([]);
@@ -22,6 +24,8 @@ const ImageGallery = () => {
     left: "0px",
     top: "0px",
   };
+  console.log(auth.listUser);
+  // let navigate = useNavigate();
   useEffect(() => {
     function getMovies() {
       setLoading(true);
@@ -47,8 +51,23 @@ const ImageGallery = () => {
         })
         .catch((err) => console.error(err));
     }
+
+    // function tokenCheck() {
+    //   let authToken = sessionStorage.getItem("Auth Token");
+    //   console.log(authToken);
+    //   if (authToken) {
+    //     navigate("/image-gallery");
+    //   }
+
+    //   if (!authToken) {
+    //     navigate("/sign-in");
+    //   }
+    // }
+
+    // tokenCheck();
     getMovies();
   }, []);
+
   console.log(data);
 
   const SortTableUser = ({ item }) => {
@@ -90,7 +109,7 @@ const ImageGallery = () => {
       <section>
         <nav className="absolute z-10 flex justify-around w-full top-10 items-center">
           <img className="h-16" alt="logo" src={gallery_logo} />
-          <span className="text-yellow-500  font-bold text-4xl">
+          <span className="text-cyan-900  font-bold text-4xl">
             ImageGallery
           </span>
         </nav>

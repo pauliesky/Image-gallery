@@ -11,13 +11,28 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const defaultToken = "UYKbvW0PJmNdtAZBinu0N9Tds9e2";
+  localStorage.setItem("User Token", defaultToken);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
-        const user = userCredential.user;
-        navigate("/image-gallery");
+        const user = userCredential.user.reloadUserInfo.localId;
+        let authToken = sessionStorage.getItem("Auth Token");
+        let defaultToken = localStorage.getItem("User Token");
+        // console.log(authToken);
+        if (authToken) {
+          navigate("/image-gallery");
+        }
+        if (defaultToken) {
+          navigate("/image-gallery");
+        }
+        if (!authToken) {
+          toast.error("Kindly Sign Up");
+        }
+        // navigate("/image-gallery");
         console.log(user);
       })
       .catch((error) => {

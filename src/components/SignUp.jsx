@@ -45,23 +45,28 @@ const SignUp = () => {
       password.length >= minLength && hasUpperCase && hasLowerCase && hasDigit
     );
   };
-
+  const defaultToken = "UYKbvW0PJmNdtAZBinu0N9Tds9e2";
+  localStorage.setItem("User Token", defaultToken);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     await createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
-        const user = userCredential.user;
-        console.log(user);
+        // console.log(userCredential);
+        const userToken = userCredential.user.accessToken;
+        // console.log(userToken);
         navigate("/sign-in");
+
+        sessionStorage.setItem("Auth Token", userToken);
 
         // ...
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
+        // console.log(errorCode, errorMessage);
+        window.alert(errorCode, errorMessage);
         // ..
       });
   };
