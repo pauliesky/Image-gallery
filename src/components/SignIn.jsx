@@ -10,9 +10,40 @@ const SignIn = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isValid, setIsValid] = useState(true);
+  const [isValidEmail, setIsValidEmail] = useState(true);
 
-  const defaultToken = "UYKbvW0PJmNdtAZBinu0N9Tds9e2";
-  localStorage.setItem("User Token", defaultToken);
+  const handleEmailChange = (e) => {
+    const inputEmail = e.target.value;
+    setEmail(inputEmail);
+
+    // const emailChecker = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const emailChecker = /\S+@\S+\.\S+/;
+    const validEmail = emailChecker.text(inputEmail);
+    setIsValidEmail(validEmail);
+  };
+
+
+  const handleChange = (e) => {
+    const inputPassword = e.target.value;
+    setPassword(inputPassword);
+
+    // Perform password validation
+    const valid = validatePassword(inputPassword);
+    setIsValid(valid);
+  };
+
+  const validatePassword = (password) => {
+    // Password validation rules (customize as needed)
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasDigit = /\d/.test(password);
+
+    return (
+      password.length >= minLength && hasUpperCase && hasLowerCase && hasDigit
+    );
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -21,12 +52,8 @@ const SignIn = () => {
         // Signed in
         const user = userCredential.user.reloadUserInfo.localId;
         let authToken = sessionStorage.getItem("Auth Token");
-        let defaultToken = localStorage.getItem("User Token");
         // console.log(authToken);
         if (authToken) {
-          navigate("/image-gallery");
-        }
-        if (defaultToken) {
           navigate("/image-gallery");
         }
         if (!authToken) {
@@ -57,16 +84,29 @@ const SignIn = () => {
             <input
               name="email"
               type="email"
-              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+
+              onChange={handleEmailChange}
               className=" mt-1 outline-none bg-[#f1f2ff] p-3 rounded-sm"
             />
+             {!isValidEmail && (
+              <p style={{ color: "red" }}>Invalid email format</p>
+            )}
             <label className="mt-3">Password</label>
             <input
               name="password"
               type="password"
-              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+
+              onChange={handleChange}
               className="mt-1 outline-none bg-[#f1f2ff] p-3 rounded-sm"
             />
+               {!isValid && (
+              <p style={{ color: "red" }}>
+                {" "}
+                Must have uppercase, lowercase, digit and min. of 8 letters{" "}
+              </p>
+            )}
             <button
               type="submit"
               className="mt-5 bg-[#5d4cc3] text-white py-3 rounded-md"

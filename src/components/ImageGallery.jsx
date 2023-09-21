@@ -12,7 +12,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 // import { useNavigate } from "react-router-dom";
-import { auth } from "./Firebase";
+// import { auth } from "./Firebase";
 
 const ImageGallery = () => {
   const [data, setData] = useState([]);
@@ -24,7 +24,7 @@ const ImageGallery = () => {
     left: "0px",
     top: "0px",
   };
-  console.log(auth.listUser);
+  // console.log(auth.listUser);
   // let navigate = useNavigate();
   useEffect(() => {
     function getMovies() {

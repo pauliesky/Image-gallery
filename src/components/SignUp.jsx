@@ -45,8 +45,7 @@ const SignUp = () => {
       password.length >= minLength && hasUpperCase && hasLowerCase && hasDigit
     );
   };
-  const defaultToken = "UYKbvW0PJmNdtAZBinu0N9Tds9e2";
-  localStorage.setItem("User Token", defaultToken);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -112,7 +111,6 @@ const SignUp = () => {
             />
             {!isValid && (
               <p style={{ color: "red" }}>
-                {" "}
                 Must have uppercase, lowercase, digit and min. of 8 letters{" "}
               </p>
             )}
